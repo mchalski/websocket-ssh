@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/xterm@4.9.0/css/xterm.css" />
+    <script src="https://unpkg.com/xterm@4.9.0/lib/xterm.js"></script>
+  </head>
+  <body>
+    <div id="terminal"></div>
+        <script>
+          var term
+          var websocket = new WebSocket("ws://localhost:8080/user/terminal");
+        
+          websocket.onopen = function(evt) {
+            var term = new Terminal();
+            term.open(document.getElementById('terminal'));
+
+            term.onData(function (data) {
+              websocket.send(data)
+            });
+
+            websocket.onmessage = function(evt) {
+              term.write(evt.data);
+            }
+          }
+        </script>
+  </body>
+</html>
+

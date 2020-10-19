@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  client:
+    build:
+      context: ./client
+    environment:
+      SSH_PORT: "22"
+      PROXY_PORT: "22222"
+      BACKEND_HOST: "deviceconnect"
+    ports:
+        # debug: publish ssh port directly (ssh from localhost)
+        - "22222:22"
+    depends_on:
+        - deviceconnect
+    volumes:
+        - ./data/authorized_keys:/root/ssh
+
+  deviceconnect:
+    build:
+      context: ./deviceconnect
+    ports:
+        - "8080:80"
+    volumes:
+        - ./data/keys:/home/backend-user/.ssh
